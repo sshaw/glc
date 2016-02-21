@@ -1,12 +1,12 @@
 # GLC: The GitHub Link Checker
 
-Monitor GitHub activity for [links that aren't permanent](https://help.github.com/articles/getting-permanent-links-to-files/) and do something.
+Monitor GitHub activity for [links that aren't permanent](https://help.github.com/articles/getting-permanent-links-to-files/), and do something.
 
 **WIP**
 
 ## Install
 
-	go get https://github.com/sshaw/glc
+	go get github.com/sshaw/glc/...
 
 Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
 
@@ -23,7 +23,7 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
 	  -b	   	    	--background			Run in the background as a daemon
       -d path	        --db=path				Where to store the DB, defaults to $HOME/.glc/
       -e name[,name]    --event=name[,name...]	Only process the named GitHub events
-      -i seconds        --interval=seconds		Retrieve events every seconds seconds, defaults to 10
+      -i seconds        --interval=seconds		Retrieve events every seconds seconds, defaults to 5
       -1				--once					Run once and exit, do not monitor
 
       -r name[,name...] --repos=name[,name...]	Monitor the named repositories, name must be in user/repo format
@@ -36,7 +36,7 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
       --exclude-users=name[,name...]			Do not monitor repositories owned by the given usernames name can also be a
 	    										file with one repository per line
 
-GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-i` seconds (default `10`).
+GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-i` seconds (default `5`).
 Currently only these events are monitored: `IssueEvent`, `IssueCommentEvent`, `PullRequestEvent`.
 
 If no token is specified then your IP will be substantially [rate limited by GitHub](https://developer.github.com/v3/#rate-limiting). A token can be provided by the `-a` option

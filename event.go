@@ -17,8 +17,13 @@ const (
 )
 
 type Correction struct {
+	// URL for the non-permanent link
 	OldURL GitHubURL
+
+	// Permanent version of OldURL
 	NewURL GitHubURL
+
+	// Snippet from the event that used the URL
 	Context string
 }
 
@@ -55,7 +60,7 @@ func (e *Event) Comment() (int, error) {
 	return *comment.ID, nil
 }
 
-// Replace non-permanent GitHub links in with their permanent version and update the event.
+// Replace non-permanent GitHub links with their permanent version and update the event.
 func (e *Event) Correct() error {
 	var err error
 

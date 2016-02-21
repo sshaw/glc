@@ -12,10 +12,7 @@ type GitHubURL struct {
 	ID string   // Branch or SHA or tag or ...
 }
 
-const (
-	Host = "github.com"
-	MasterBranch = "master"
-)
+const Host = "github.com"
 
 var shaRegex = regexp.MustCompile(`^[a-f0-9]{7,40}$`)
 var pathRegex = regexp.MustCompile(`^/([^/]+)/([^/]+)/blob/([^/]+)/(\S+)`)
@@ -49,11 +46,6 @@ func (url *GitHubURL) HasSHA() bool {
 
 func (url *GitHubURL) IsPermanent() bool {
 	return !url.IsDeep() || url.HasSHA()
-}
-
-// Needed?
-func (url *GitHubURL) UsesMasterBranch() bool {
-	return url.ID == MasterBranch
 }
 
 func (url *GitHubURL) IsDeep() bool {

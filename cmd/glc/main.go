@@ -23,7 +23,7 @@ Options:
   -b	   	    --background		Run in the background as a daemon
   -d path	    --db=path			Where to store the DB, defaults to $HOME/.glc/
   -e name[,name]    --event=name[,name...]	Only process the named GitHub events
-  -i seconds        --interval=seconds		Retrieve events every seconds seconds, defaults to 10
+  -i seconds        --interval=seconds		Retrieve events every seconds seconds, defaults to 5
 
   -r name[,name...] --repos=name[,name...]	Monitor the named repositories, name must be in user/repo format
   --include-repos=name[,name...]		name can also be a file with one repository per line

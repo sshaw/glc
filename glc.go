@@ -81,7 +81,7 @@ type GLC struct {
 	excludeRepos map[string]bool
 }
 
-// Create a new GitHub Link Checker. Token is an optional GitHub API token.
+// Create a new GitHub Link Checker.
 func New(options *GLCOptions) *GLC {
 	var gh *github.Client
 	var client *http.Client
@@ -113,33 +113,7 @@ func New(options *GLCOptions) *GLC {
 	return &GLC{gh: gh, db: db}
 }
 
-// Find GitHub activity containing fragile URLs in the given repositories.
-func (glc *GLC) FindRepositoryEvents(user, repo string, eventOptions *EventOptions) ([]*Event, error) {
-	var events []*Event
-
-	glc.initOptions(eventOptions)
-
-	listOptions := github.ListOptions{Page: 1}
-	for listOptions.Page > 0 {
-		ghEvents, resp, err := glc.gh.Activity.ListRepositoryEvents(user, repo, &listOptions)
-		if err != nil {
-			return nil, fmt.Errorf("Error finding repository events: %s", err)
-		}
-
-		glcEvents, err := glc.processEvents(ghEvents)
-		if err != nil {
-			return nil, fmt.Errorf("Error processing repository events: %s", err)
-		}
-
-		listOptions.Page = resp.NextPage
-		events = append(events, glcEvents...)
-	}
-
-	return events, nil
-}
-
-// Find GitHub activity containing fragile URLs. By default this looks
-// at GitHub's list of public events.
+// Find GitHub activity containing GitHub links that aren't permanent. This looks at GitHub's list of public events.
 func (glc *GLC) FindEvents(eventOptions *EventOptions) ([]*Event, error) {
 	var events []*Event
 
