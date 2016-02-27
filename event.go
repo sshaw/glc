@@ -23,7 +23,7 @@ type Correction struct {
 	// Permanent version of OldURL
 	NewURL GitHubURL
 
-	// Snippet from the event that used the URL
+	// Snippet from the part of the event containing OldURL
 	Context string
 }
 

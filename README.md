@@ -12,29 +12,30 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
 
 ## Usage
 
-    usage: glc [-di seconds] [-a token] [-u name...] [-r name...] command
+    usage: glc  [-ba token] [-d path] [-e name...] [-i name...]
+    			[-r name...] [-u name...] [-w seconds] command
     Command must be one of:
-	  print		Print activity containing non-permanent links, include the permanent versions
-	  correct	Update the original event, replacing each non-permanent link with its permanent version
+      print		Print activity containing non-permanent links, include their permanent versions
+      correct	Update the original event, replacing each non-permanent link with its permanent version
       comment	Create a comment on the event that includes the permanent version of each non-permanent link
 
     Options:
-      -a token		    --auth=token			GitHub API token, comments/suggestions will be performed as the associated user
-	  -b	   	    	--background			Run in the background as a daemon
-      -d path	        --db=path				Where to store the DB, defaults to $HOME/.glc/
-      -e name[,name]    --event=name[,name...]	Only process the named GitHub events
-      -i seconds        --interval=seconds		Retrieve events every seconds seconds, defaults to 5
-      -1				--once					Run once and exit, do not monitor
+      -a token          --auth=token			   GitHub API token, all activity will be performed as the associated user
+      -b	   	        --background			   Run in the background as a daemon
+      -d path	        --db=path				   Where to store the DB, defaults to $HOME/.glc/
+      -e name[,name]    --event=name[,name...]	   Only process the named GitHub events
+      -i name[,name]    --ignore-files=name[,name] Ignore links to these file's basenames
 
-      -r name[,name...] --repos=name[,name...]	Monitor the named repositories, name must be in user/repo format
-      --include-repos=name[,name...]			name can also be a file with one repository per line
-      --exclude-repos=name[,name...]			Do not monitor the named repositories, name must be in user/repo format
-    											name can also be a file with one repository per line
+	  -r name[,name...] --repos=name[,name...]	   Monitor the named repositories, name must be in user/repo format
+      --include-repos=name[,name...]			   name can also be a file with one repository per line
+      --exclude-repos=name[,name...]			   Do not monitor the named repositories, name must be in user/repo format
+	  											   name can also be a file with one repository per line
 
-      -u name[,name...] --users=name[,name...]	Monitor repositories owned by the given usernames name can also be a file
-      --include-users=name[,name...]			with one repository per line
-      --exclude-users=name[,name...]			Do not monitor repositories owned by the given usernames name can also be a
-	    										file with one repository per line
+      -u name[,name...] --users=name[,name...]	   Monitor repositories owned by the given usernames name can also be a file
+      --include-users=name[,name...]			   with one repository per line
+      --exclude-users=name[,name...]			   Do not monitor repositories owned by the given usernames name can also be a
+      	  										   file with one repository per line
+      -w seconds        --wait=seconds			   Retrieve events every seconds seconds, defaults to 5
 
 GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-i` seconds (default `5`).
 Currently only these events are monitored: `IssueEvent`, `IssueCommentEvent`, `PullRequestEvent`.

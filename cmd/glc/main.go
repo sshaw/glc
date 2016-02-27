@@ -11,19 +11,20 @@ import (
 	"github.com/sshaw/glc"
 )
 
-// TODO: --ignore-files=xxx
-const usage = `usage: glc [-di seconds] [-a token] [-u name...] [-r name...] command
+const usage = `usage: glc [-ba token] [-d path] [-e name...] [-i name...]
+	   [-r name...] [-u name...] [-w seconds] command
+
 Command must be one of:
   print		Print activity containing non-permanent links, include their permanent versions
   correct	Update the original event, replacing each non-permanent link with its permanent version
   comment	Create a comment on the event that includes the permanent version of each non-permanent link
 
 Options:
-  -a token          --auth=token		GitHub API token, comments/suggestions will be performed as the associated user
+  -a token          --auth=token		GitHub API token, all activity will be performed as the associated user
   -b	   	    --background		Run in the background as a daemon
   -d path	    --db=path			Where to store the DB, defaults to $HOME/.glc/
   -e name[,name]    --event=name[,name...]	Only process the named GitHub events
-  -i seconds        --interval=seconds		Retrieve events every seconds seconds, defaults to 5
+  -i name[,name]    --ignore-files=name[,name]  Ignore links to these file basenames
 
   -r name[,name...] --repos=name[,name...]	Monitor the named repositories, name must be in user/repo format
   --include-repos=name[,name...]		name can also be a file with one repository per line
@@ -34,6 +35,7 @@ Options:
   --include-users=name[,name...]		with one repository per line
   --exclude-users=name[,name...]		Do not monitor repositories owned by the given usernames name can also be a
 						file with one repository per line
+  -w seconds        --wait=seconds		Retrieve events every seconds seconds, defaults to 5
 `
 
 const (
@@ -41,29 +43,22 @@ const (
 	commandCorrect = "correct"
 	commandComment = "comment"
 
-	defaultInterval = 5
+	defaultWait = 5
 )
 
 var (
-	events string
 	includeRepos string
 	excludeRepos string
 	includeUsers string
 	excludeUsers string
 
-	runOnce bool
 	auth string
 	daemonize bool
 	db string
-	interval int
-
-	ignoreFiles = []string{
-		"AUTHORS", "AUTHORS.txt", "AUTHORS.md", "AUTHORS.markdown",
-		"CONTRIBUTING", "CONTRIBUTING.txt", "CONTRIBUTING.md", "CONTRIBUTING.markdown",
-		"LICENSE", "LICENSE.txt",
-		"ISSUE_TEMPLATE", "ISSUE_TEMPLATE.md", "ISSUE_TEMPLATE.markdown",
-		"PULL_REQUEST_TEMPLATE", "PULL_REQUEST_TEMPLATE.md", "PULL_REQUEST_TEMPLATE.markdown",
-	}
+	events string
+	ignoreFiles string
+	runOnce bool
+	wait int
 )
 
 func printError(err string, args ...interface{}) {
@@ -81,6 +76,8 @@ func eachLine(path string, cb func(string))  {
 	if err != nil {
 		fail("failed to open file %s: %s", path, err)
 	}
+
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
@@ -171,7 +168,7 @@ func executeCommand(command string, glcOptions *glc.GLCOptions, eventOptions *gl
 			break
 		}
 
-		time.Sleep(time.Duration(interval) * time.Second)
+		time.Sleep(time.Duration(wait) * time.Second)
 	}
 }
 
@@ -186,12 +183,14 @@ func main() {
 
 	flag.StringVar(&auth, "a", "", "")
 	flag.StringVar(&auth, "auth", os.Getenv("GLC_AUTH_TOKEN"), "")
-	flag.BoolVar(&daemonize, "d", false, "")
-	flag.BoolVar(&daemonize, "daemon", false, "")
+	flag.BoolVar(&daemonize, "b", false, "")
+	flag.BoolVar(&daemonize, "background", false, "")
+	flag.StringVar(&db, "d", "", "")
+	flag.StringVar(&db, "db", "", "")
 	flag.StringVar(&events, "e", "", "")
 	flag.StringVar(&events, "events", "", "")
-	flag.IntVar(&interval, "i", defaultInterval, "")
-	flag.IntVar(&interval, "interval", defaultInterval, "")
+	flag.StringVar(&ignoreFiles, "i", "", "")
+	flag.StringVar(&ignoreFiles, "ignore-files", "", "")
 	flag.StringVar(&includeRepos, "r", "", "")
 	flag.StringVar(&includeRepos, "repos", "", "")
 	flag.BoolVar(&runOnce, "1", false, "")
@@ -202,6 +201,8 @@ func main() {
 	flag.StringVar(&includeUsers, "users", "", "")
 	flag.StringVar(&includeUsers, "include-users", "", "")
 	flag.StringVar(&excludeUsers, "exclude-users", "", "")
+	flag.IntVar(&wait, "w", defaultWait, "")
+	flag.IntVar(&wait, "wait", defaultWait, "")
 
 	flag.Parse()
 
@@ -220,8 +221,8 @@ func main() {
 	}
 
 	// Process options
-	if interval < 0 {
-		fail("interval must be > 0")
+	if wait < 0 {
+		fail("wait must be > 0")
 	}
 
 	// GLCOptions
@@ -234,6 +235,10 @@ func main() {
 	}
 
 	// EventOptions
+	if ignoreFiles != "" {
+		eventOptions.IgnoreFiles = parseNameArg(ignoreFiles)
+	}
+
 	if includeRepos != "" {
 		eventOptions.IncludeRepos = parseNameArg(includeRepos)
 	}
