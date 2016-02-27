@@ -132,10 +132,10 @@ func correctEvent(event *glc.Event)  {
 }
 
 func printEvent(event *glc.Event)  {
-	fmt.Println(strings.Repeat("-", 17))
+	fmt.Println(strings.Repeat("-", 18))
 	// TODO: Sometimes should use "Number" other times "ID"
-	fmt.Printf("%5s: %s\n%5s: %d\n", "Event", event.Type, "Number", event.Number)
-	fmt.Println(strings.Repeat("-", 17))
+	fmt.Printf("%6s: %s\n%6s: %s\n%6s: %d\n", "Repo", event.Repo, "Event", event.Type, "Number", event.Number)
+	fmt.Println(strings.Repeat("-", 18))
 
 	for i, correction := range(event.Corrections) {
 		fmt.Printf("%2d. %-11s %s\n", i + 1, "Current:", correction.OldURL.String())
