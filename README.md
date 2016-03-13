@@ -12,7 +12,7 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
 
 ## Usage
 
-    usage: glc  [-ba token] [-d path] [-e name...] [-i name...]
+    usage: glc  [-a token] [-d path] [-e name...] [-i name...]
     			[-r name...] [-u name...] [-w seconds] command
     Command must be one of:
       print		Print activity containing non-permanent links, include their permanent versions
@@ -21,7 +21,6 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
 
     Options:
       -a token          --auth=token			   GitHub API token, all activity will be performed as the associated user
-      -b	   	        --background			   Run in the background as a daemon
       -d path	        --db=path				   Where to store the DB, defaults to $HOME/.glc/
       -e name[,name]    --event=name[,name...]	   Only process the named GitHub events
       -i name[,name]    --ignore-files=name[,name] Ignore links to these file's basenames
@@ -37,7 +36,7 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
       	  										   file with one repository per line
       -w seconds        --wait=seconds			   Retrieve events every seconds seconds, defaults to 5
 
-GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-i` seconds (default `5`).
+GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-w` seconds (default `5`).
 Currently only these events are monitored: `IssueEvent`, `IssueCommentEvent`, `PullRequestEvent`.
 
 If no token is specified then your IP will be substantially [rate limited by GitHub](https://developer.github.com/v3/#rate-limiting). A token can be provided by the `-a` option

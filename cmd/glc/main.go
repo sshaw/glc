@@ -11,7 +11,7 @@ import (
 	"github.com/sshaw/glc"
 )
 
-const usage = `usage: glc [-ba token] [-d path] [-e name...] [-i name...]
+const usage = `usage: glc [-a token] [-d path] [-e name...] [-i name...]
 	   [-r name...] [-u name...] [-w seconds] command
 
 Command must be one of:
@@ -21,7 +21,6 @@ Command must be one of:
 
 Options:
   -a token          --auth=token		GitHub API token, all activity will be performed as the associated user
-  -b	   	    --background		Run in the background as a daemon
   -d path	    --db=path			Where to store the DB, defaults to $HOME/.glc/
   -e name[,name]    --event=name[,name...]	Only process the named GitHub events
   -i name[,name]    --ignore-files=name[,name]  Ignore links to these file basenames
