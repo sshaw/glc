@@ -328,14 +328,12 @@ func (glc *GLC) ignoreFile(url *GitHubURL) bool {
 	}
 
 	name := strings.ToLower(url.Path[i+1:len(url.Path)])
-	fmt.Printf("%+v\n", name) // output for debug
-
 	return glc.ignoreFiles[name]
 }
 
 func (glc *GLC) ignoreURL(url *GitHubURL) bool {
 	// nil means that it wasn't a GitHub URL
-	if url == nil || url.IsPermanent() || glc.ignoreFile(url) && glc.urlHasGitTag(url) {
+	if url == nil || url.IsPermanent() || glc.ignoreFile(url) || glc.urlHasGitTag(url) {
 		return true
 	}
 
