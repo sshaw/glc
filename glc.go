@@ -238,18 +238,18 @@ func (glc *GLC) correctURL(badURL *GitHubURL) (*GitHubURL, error) {
 
 	commits, _, err := glc.gh.Repositories.ListCommits(badURL.User, badURL.Repo, &options)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to list comments for broken URL %s: %s", badURL, err)
 	}
 
 	// TODO: can len(commits) == 0?
 	rawurl := strings.Replace(badURL.String(), badURL.ID, *commits[0].SHA, 1)
 	newURL, err := parseGitHubURL(rawurl)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Failed to parse corrected URL %s: %s", rawurl, err)
 	}
 
 	if newURL == nil {
-		return nil, fmt.Errorf("Failed to parse corrected GitHub URL: %s", rawurl)
+		return nil, fmt.Errorf("Corrected URL is not a GitHub URL: %s", rawurl)
 	}
 
 	return newURL, nil
@@ -261,7 +261,7 @@ func (glc *GLC) findURLsToFix(body string) (map[string][]*GitHubURL, error) {
 	for _, url := range(xurls.Strict.FindAllString(body, -1)) {
 		oldURL, err := parseGitHubURL(url)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("Failed to parse URL %s: %s", url, err)
 		}
 
 		if !glc.ignoreURL(oldURL) {
