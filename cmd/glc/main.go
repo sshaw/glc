@@ -34,7 +34,7 @@ Options:
   --include-users=name[,name...]		with one repository per line
   --exclude-users=name[,name...]		Do not monitor repositories owned by the given usernames name can also be a
 						file with one repository per line
-  -w seconds        --wait=seconds		Retrieve events every seconds seconds, defaults to 5
+  -w seconds        --wait=seconds		Retrieve events every seconds seconds, defaults to 10
 `
 
 const (
@@ -42,7 +42,7 @@ const (
 	commandCorrect = "correct"
 	commandComment = "comment"
 
-	defaultWait = 5
+	defaultWait = 10
 )
 
 var (

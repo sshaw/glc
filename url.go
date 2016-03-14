@@ -15,7 +15,7 @@ type GitHubURL struct {
 const Host = "github.com"
 
 var shaRegex = regexp.MustCompile(`^[a-f0-9]{7,40}$`)
-var pathRegex = regexp.MustCompile(`^/([^/]+)/([^/]+)/blob/([^/]+)/(\S+)`)
+var pathRegex = regexp.MustCompile(`^/([^/]+)/([^/]+)/blob/([^/]+)/\S+`)
 
 func parseGitHubURL (rawurl string) (*GitHubURL, error) {
 	u, err := url.Parse(rawurl)

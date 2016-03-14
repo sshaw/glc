@@ -34,9 +34,9 @@ Put `$GOPATH/bin` (assuming `GOPATH` has one path) in your `PATH`.
       --include-users=name[,name...]			   with one repository per line
       --exclude-users=name[,name...]			   Do not monitor repositories owned by the given usernames name can also be a
       	  										   file with one repository per line
-      -w seconds        --wait=seconds			   Retrieve events every seconds seconds, defaults to 5
+      -w seconds        --wait=seconds			   Retrieve events every seconds seconds, defaults to 10
 
-GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-w` seconds (default `5`).
+GLC monitors [public GitHub events](https://developer.github.com/v3/activity/events/#list-public-events), polling for new events every `-w` seconds (default `10`).
 Currently only these events are monitored: `IssueEvent`, `IssueCommentEvent`, `PullRequestEvent`.
 
 If no token is specified then your IP will be substantially [rate limited by GitHub](https://developer.github.com/v3/#rate-limiting). A token can be provided by the `-a` option
